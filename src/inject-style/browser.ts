@@ -41,7 +41,7 @@ function addStyle(id: string, css: StyleSource) {
         ' */'
     }
 
-    if (!style.element) {
+    if (!style.element && typeof document !== 'undefined') {
       style.element = document.createElement('style')
       style.element.type = 'text/css'
       if (css.media) style.element.setAttribute('media', css.media)
@@ -51,12 +51,12 @@ function addStyle(id: string, css: StyleSource) {
       HEAD.appendChild(style.element)
     }
 
-    if ('styleSheet' in style.element) {
+    if (style.element && 'styleSheet' in style.element) {
       style.styles.push(code)
       ;(<any>style.element).styleSheet.cssText = style.styles
         .filter(Boolean)
         .join('\n')
-    } else {
+    } else if (typeof document !== 'undefined') {
       const index = style.ids.size - 1
       const textNode = document.createTextNode(code)
       const nodes = style.element.childNodes
